@@ -21,5 +21,21 @@
 			<!-- <label for="username">Username</label> -->
 			<input id="file" name="file" type="file" />
 		</form>
+		<ul>
+			<% for (let folder of folders) { %>
+				<li>
+					<h3><%= folder.name %></h3>
+					<ul>
+						<% if (folder.files) { %>
+							<% for (let file of folder.files) { %>
+								<li>
+									<p><%= file.name %></p>
+								</li>
+							<% } %>
+						<% } %>
+					</ul>
+				</li>
+			<%}%>
+		</ul>
 	</body>
 </html>
