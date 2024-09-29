@@ -30,6 +30,7 @@
 							<% for (let file of folder.files) { %>
 								<li>
 									<p><%= file.name %></p>
+									<a href="/file?id=<%= file.id %>">View Details</a>
 								</li>
 							<% } %>
 						<% } %>
