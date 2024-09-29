@@ -13,25 +13,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Member {
-  id       Int    @id @default(autoincrement())
-  name     String
-  password String 
-}
-
 model File {
   id       Int    @id @default(autoincrement())
-  name     String @unique
+  name     String // @unique
   size     Int
   upload   Int
-  folder   Folder @relation(fields: [folderID], references: [id])
-  folderID Int
+  folder   Folder @relation(fields: [folderId], references: [id])
+  folderId Int
 }
 
 model Folder {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  files File[]
+  id        Int    @id @default(autoincrement())
+  name      String 
+  member    Member @relation(fields: [memberId], references: [id])
+  memberId  Int
+  files     File[]
+}
+
+model Member {
+  id       Int      @id @default(autoincrement())
+  name     String
+  password String 
+  status   Boolean  @default(false)
+  folders  Folder[]  
 }
 
 model Session {
