@@ -3,9 +3,16 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-	// await prisma.member.deleteMany();
-	// await prisma.folder.deleteMany();
-	// fix id reset later
+	await prisma.folder.deleteMany();
+	await prisma.file.deleteMany();
+	await prisma.member.deleteMany();
+	console.log('All members, folders, and files deleted');
+
+	// Reset the auto-incrementing primary key sequences
+	await prisma.$executeRaw`ALTER SEQUENCE "Folder_id_seq" RESTART WITH 1`;
+	await prisma.$executeRaw`ALTER SEQUENCE "File_id_seq" RESTART WITH 1`;
+	await prisma.$executeRaw`ALTER SEQUENCE "Member_id_seq" RESTART WITH 1`;
+
 	await prisma.member.create({
 		data: {
 			name: 'test',

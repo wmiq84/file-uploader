@@ -9,16 +9,11 @@
 		<% if (locals.user) {%>
 		<h1>WELCOME BACK <%= member.name %></h1>
 		<%}%>
-		<form action="/" method="GET">
+		<form action="/log-in" method="POST">
 			<label for="username">Username</label>
-			<input id="username" name="username" placeholder="username" type="text" />
+			<input id="username" name="username" type="text" />
 			<label for="password">Password</label>
-			<input
-				id="password"
-				name="password"
-				placeholder="password"
-				type="password"
-			/>
+			<input id="password" name="password" type="password" />
 			<button>Log In</button>
 		</form>
 		<h1>Upload file</h1>

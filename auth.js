@@ -1,46 +1,52 @@
 const passport = require("passport");
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 passport.use(
-	new LocalStrategy(async (username, password, done) => {
-		try {
-			const { rows } = await pool.query(
-				'SELECT * FROM members WHERE email = $1',
-				[username]
-			);
-			const user = rows[0];
+    new LocalStrategy(async (name, password, done) => {
+		console.log("Test");
+        try {
+            const user = await prisma.member.findUnique({
+                where: {
+                    name: name,
+                },
+            });
 
-			if (!user) {
-				return done(null, false, { message: 'Incorrect email' });
-			}
-			const match = await bcrypt.compare(password, user.password);
-			if (!match) {
-				// passwords do not match!
-				return done(null, false, { message: 'Incorrect password' });
-			}
-			return done(null, user);
-		} catch (err) {
-			return done(err);
-		}
-	})
+            if (!user) {
+                return done(null, false, { message: 'Incorrect name' });
+            }
+
+            const match = await bcrypt.compare(password, user.password);
+            if (!match) {
+                // passwords do not match!
+                return done(null, false, { message: 'Incorrect password' });
+            }
+
+            return done(null, user);
+        } catch (err) {
+            return done(err);
+        }
+    })
 );
 
 passport.serializeUser((user, done) => {
-	done(null, user.id);
+    done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
-	try {
-		const { rows } = await pool.query('SELECT * FROM members WHERE id = $1', [
-			id,
-		]);
-		const user = rows[0];
-
-		done(null, user);
-	} catch (err) {
-		done(err);
-	}
+    try {
+        const user = await prisma.member.findUnique({
+            where: {
+                id: id,
+            },
+        });
+        done(null, user);
+    } catch (err) {
+        done(err, null);
+    }
 });
 
 module.exports = passport;
