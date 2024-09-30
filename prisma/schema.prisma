@@ -18,6 +18,7 @@ model File {
   name     String // @unique
   size     Int
   upload   Int
+  path     String
   folder   Folder @relation(fields: [folderId], references: [id])
   folderId Int
 }

@@ -1,24 +1,24 @@
 // routes/usersRouter.js
-const { Router } = require("express");
-const usersController = require("../controllers/usersController");
+const { Router } = require('express');
+const usersController = require('../controllers/usersController');
 const usersRouter = Router();
 const passport = require('../auth');
-const express = require('express')
-const app = express()
-const multer  = require('multer')
-const upload = multer()
+const express = require('express');
+const app = express();
+const multer = require('multer');
+const upload = multer();
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
-usersRouter.get("/", usersController.createSignIn);
+usersRouter.get('/', usersController.createSignIn);
 // usersRouter.post("/", usersController.logIn);
 
 usersRouter.post('/', upload.single('file'), async (req, res) => {
 	try {
-		const { originalname, mimetype, size, path } = req.file;
-		const userId = req.user.id; 
+		const { originalname, mimetype, size, path: filePath } = req.file;
+		const userId = req.user.id;
 		const { folderId } = req.body;
 
 		// Store file metadata in the database
@@ -27,9 +27,10 @@ usersRouter.post('/', upload.single('file'), async (req, res) => {
 				name: originalname,
 				size: size,
 				upload: 10,
+				path: filePath,
 				folder: {
-                    connect: { id: 1 },
-                },
+					connect: { id: 1 },
+				},
 			},
 		});
 
@@ -47,6 +48,8 @@ usersRouter.post(
 		failureRedirect: '/',
 	})
 );
-usersRouter.get("/file", usersController.viewFile)
+
+usersRouter.get('/download', usersController.downloadFile);
+usersRouter.get('/file', usersController.viewFile);
 
 module.exports = usersRouter;

@@ -28,6 +28,7 @@ async function main() {
 							name: 'Placeholder',
 							size: 1,
 							upload: 10,
+							path: "Placeholder"
 						},
 					},
 				},
